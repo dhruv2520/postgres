@@ -12,7 +12,7 @@ const db =  new Pool({
   host: "localhost",
   user:"postgres",
   password:"admin",
-  database:"demo",
+  database:"ms folder",
   port:5432
 })
 db.connect(function(err) {
