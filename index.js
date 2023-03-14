@@ -47,17 +47,23 @@ db.connect();
 
 //
 app.get('/msuser',(req,res)=>{
-  db.query(`select 
-                 * 
-                 from
-                    "folder"
-    innerjoin
-     "metting" on "metting"."folderID"= "folder".ID 
-     inner join 
-     "msuser" on "msuser"."mettingId"="metting".Id
-      where
-       cast("metting"."folderID"as text)like`)}
-)
+  db.query(`select
+  *
+from  "folder"
+inner join  "metting" on "metting"."folderID"= "folder".ID
+inner join
+"msuser" on "msuser"."mettingId"="metting".Id
+     where
+   CAST("metting"."folderID" as text)like '${searchFilter}';`,(err,result) =>{
+    
+    if(!err){
+      res.send(result.rows);
+    }
+   });
+   db.end;  
+  })
+    
+  
 
 // module.exports = db;
 
