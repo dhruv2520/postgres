@@ -1,18 +1,26 @@
-const postgres = require("postgres");
-const connection = require("../config/connection.js");
-
-// Create a connection to the database
-const  connection = postgres.createConnection({
+const { Client } = require('pg');
+const connection = require('../config/connection.js');
+const db =  new Client({
   host: connection.HOST,
-  user: connection.USER,
-  password: connection.PASSWORD,
-  database: connection.DB
-});
-
-// open the MySQL connection
-connection.connect(error => {
-  // if (error) throw error;
-  console.log("Successfully connected to the database.");
+  user:connection.USER,
+  password:connection.PASSWORD,
+  database:connection.DB,
+  port:connection.port
+})
+db.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
 });
 
 module.exports = connection;
+
+
+
+
+
+
+
+
+
+
+
