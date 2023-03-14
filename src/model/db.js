@@ -12,6 +12,20 @@ db.connect(function(err) {
   console.log("Connected!");
 });
 
+// get api
+
+app.get('/msuser', (req, res)=>{
+  db.query(`Select * from msuser`, (err, result)=>{
+      if(!err){
+          res.send(result.rows);
+      }
+  });
+  db.end;
+})
+db.connect();
+
+
+
 module.exports = db;
 
 
