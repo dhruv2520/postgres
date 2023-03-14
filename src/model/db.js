@@ -1,6 +1,6 @@
-const { Client } = require('pg');
+const { Pool } = require('pg');
 const connection = require('../config/connection.js');
-const db =  new Client({
+const db =  new Pool({
   host: connection.HOST,
   user:connection.USER,
   password:connection.PASSWORD,
@@ -12,7 +12,7 @@ db.connect(function(err) {
   console.log("Connected!");
 });
 
-module.exports = connection;
+module.exports = db;
 
 
 
