@@ -22,42 +22,61 @@ db.connect(function(err) {
 
 // get api
 
-app.get('/msuser', (req, res)=>{
-  db.query(`Select * from msuser`, (err, result)=>{
-      if(!err){
-          res.send(result.rows);
-      }
-  });
-  db.end;
-})
-db.connect();
+// app.get('/msuser', (req, res)=>{
+//   db.query(`Select * from msuser`, (err, result)=>{
+//       if(!err){
+//           res.send(result.rows);
+//       }
+//   });
+//   db.end;
+// })
+// db.connect();
+
+// //
+
+// app.get('/msuser/:id', (req, res)=>{
+//   db.query(`Select * from msuser where id=${req.params.id}`, (err, result)=>{
+//       if(!err){
+//           res.send(result.rows);
+//       }
+//   });
+//   db.end;
+// })
+
+// db.connect();
 
 //
+app.get('/usersdata', (req, res)=>{
+  // console.log("req.body",req.body)
+  let searchFilter = req.body.search
+  console.log(searchFilter)
+  db.query(
 
-app.get('/msuser/:id', (req, res)=>{
-  db.query(`Select * from msuser where id=${req.params.id}`, (err, result)=>{
-      if(!err){
-          res.send(result.rows);
-      }
+`SELECT *
+FROM (("folder"
+INNER JOIN "metting"
+ON "folder".id="metting"."folderid")
+INNER JOIN "msuser"
+ON "metting".id="msuser"."mettingid")
+ WHERE
+ CAST("folder"."id" as text)like '${searchFilter}' OR
+ CAST("metting"."folderid" as text)like '${searchFilter}' OR
+ CAST("msuser"."mettingid" as text)like '${searchFilter}' OR
+ "firstName" like '${searchFilter}'or
+ "lastName" like '${searchFilter}'or
+ "email" like '${searchFilter}' or
+ "mettingName" like '${searchFilter}' or
+ "folderName" like '${searchFilter}'
+;`
+,(err,result) => {
+  if(!err){
+    res.send(result.rows);
+  }
+});
+db.end
   });
-  db.end;
-})
-
-db.connect();
-
-//
-app.get('/msuser',(req,res)=>{
-  db.query(`select 
-                 * 
-                 from
-                    "folder"
-    innerjoin
-     "metting" on "metting"."folderID"= "folder".ID 
-     inner join 
-     "msuser" on "msuser"."mettingId"="metting".Id
-      where
-       cast("metting"."folderID"as text)like`)}
-)
+    
+  
 
 // module.exports = db;
 
