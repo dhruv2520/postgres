@@ -47,27 +47,26 @@ db.connect(function(err) {
 
 //
 app.get('/usersdata', (req, res)=>{
-  // console.log("req.body",req.body)
+   console.log("req.body>>",req.body)
   let searchFilter = req.body.search
   console.log(searchFilter)
   db.query(
-
-`SELECT *
-FROM (("folder"
-INNER JOIN "metting"
-ON "folder".id="metting"."folderid")
-INNER JOIN "msuser"
-ON "metting".id="msuser"."mettingid")
- WHERE
- CAST("folder"."id" as text)like '${searchFilter}' OR
- CAST("metting"."folderid" as text)like '${searchFilter}' OR
- CAST("msuser"."mettingid" as text)like '${searchFilter}' OR
- "firstName" like '${searchFilter}'or
- "lastName" like '${searchFilter}'or
- "email" like '${searchFilter}' or
- "mettingName" like '${searchFilter}' or
- "folderName" like '${searchFilter}'
-;`
+    `SELECT *
+    FROM (("folder"
+    INNER JOIN "metting"
+    ON "folder".id="metting"."folderid")
+    INNER JOIN "msuser"
+    ON "metting".id="msuser"."mettingid")
+     WHERE
+     CAST("folder"."id" as text)like '${searchFilter}' OR
+     CAST("metting"."folderid" as text)like '${searchFilter}' OR
+     CAST("msuser"."mettingid" as text)like '${searchFilter}' OR
+     "firstName" i like '${searchFilter}'or
+     "lastName" i like '${searchFilter}'or
+     "email" i like '${searchFilter}' or
+     "mettingName"i like '${searchFilter}' or
+     "folderName"i like '${searchFilter}'
+    ;`
 ,(err,result) => {
   if(!err){
     res.send(result.rows);
