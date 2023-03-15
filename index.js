@@ -8,14 +8,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //
 const { Pool } = require('pg');
 // const connection = require('../config/connection.js');
-const db =  new Pool({
+const db = new Pool({
   host: "localhost",
-  user:"postgres",
-  password:"admin",
-  database:"ms folder",
-  port:5432
+  user: "postgres",
+  password: "admin",
+  database: "ms folder",
+  port: 5432
 })
-db.connect(function(err) {
+db.connect(function (err) {
   if (err) throw err;
   console.log("Connected!");
 });
@@ -46,36 +46,34 @@ db.connect(function(err) {
 // db.connect();
 
 //
-app.get('/usersdata', (req, res)=>{
-   console.log("req.body>>",req.body)
-  let searchFilter = req.body.search
-  console.log(searchFilter)
-  db.query(
-    `SELECT *
+app.get('/usersdata', async (req, res, result) => {
+  try {
+    let searchFilter = req.body.search
+    console.log('searchFilter :>> ', searchFilter);
+    let data = await db.query(
+      `SELECT *
     FROM (("folder"
     INNER JOIN "metting"
     ON "folder".id="metting"."folderid")
     INNER JOIN "msuser"
     ON "metting".id="msuser"."mettingid")
      WHERE
-     CAST("folder"."id" as text)like '${searchFilter}' OR
-     CAST("metting"."folderid" as text)like '${searchFilter}' OR
-     CAST("msuser"."mettingid" as text)like '${searchFilter}' OR
-     "firstName" i like '${searchFilter}'or
-     "lastName" i like '${searchFilter}'or
-     "email" i like '${searchFilter}' or
-     "mettingName"i like '${searchFilter}' or
-     "folderName"i like '${searchFilter}'
-    ;`
-,(err,result) => {
-  if(!err){
-    res.send(result.rows);
+     CAST("folder"."id" as text) like '${searchFilter}' OR
+     CAST("metting"."folderid" as text)  like '${searchFilter}' OR
+     CAST("msuser"."mettingid" as text)  like '${searchFilter}' OR
+     "firstName"  like '${searchFilter}'or
+     "lastName"  like '${searchFilter}'or
+     "email"  like '${searchFilter}' or
+     "mettingName" like '${searchFilter}' or
+     "folderName" like '${searchFilter}'
+    ;`)
+    res.status(200).send({ sucess: true, data: data.rows })
+  } catch (error) {
+    res.status(400).send({ sucess: false, message: error.message })
   }
 });
-db.end
-  });
-    
-  
+
+
 
 // module.exports = db;
 
