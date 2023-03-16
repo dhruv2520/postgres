@@ -49,35 +49,39 @@ db.connect(function (err) {
 app.get('/usersdata', async (req, res, result) => {
   try {
     let searchFilter = req.body.search
+     
+   
     console.log('searchFilter :>> ', searchFilter);
     let data = await db.query(
-      `SELECT *
-    FROM (("folder"
+    `SELECT *
+    FROM (
+      (
+        "folder"
     INNER JOIN "metting"
     ON "folder".id="metting"."folderid")
     INNER JOIN "msuser"
-    ON "metting".id="msuser"."mettingid")
-     WHERE
-     CAST("folder"."id" as text) like '${searchFilter}' OR
-     CAST("metting"."folderid" as text)  like '${searchFilter}' OR
-     CAST("msuser"."mettingid" as text)  like '${searchFilter}' OR
-     "firstName"  like '${searchFilter}'or
-     "lastName"  like '${searchFilter}'or
-     "email"  like '${searchFilter}' or
-     "mettingName" like '${searchFilter}' or
-     "folderName" like '${searchFilter}'
-    ;`)
-    res.status(200).send({ sucess: true, data: data.rows })
+    ON "metting".id="msuser"."mettingid") 
+
+    ${!searchFilter
+      ?""
+      
+    : ` WHERE
+           CAST("folder"."id" as text) like '${searchFilter}' OR
+            CAST("metting"."folderid" as text)  like '${searchFilter}' OR
+           CAST("msuser"."mettingid" as text)  like '${searchFilter}' OR
+           CAST("firstName" as text) ilike '${searchFilter}'or
+           CAST ("lastName" as text)  like '${searchFilter}'or
+           CAST("email" as text) like '${searchFilter}' or
+           CAST("mettingName"as text) like '${searchFilter}' or
+           CAST("folderName"as text) like '${searchFilter}'`}
+
+    `)
+       res.status(200).send({ sucess: true, data: data.rows})
   } catch (error) {
     res.status(400).send({ sucess: false, message: error.message })
+    console.log('message :>> ',  res.status(400));
   }
 });
-
-
-
-// module.exports = db;
-
-
 app.listen(3000, () => {
   console.log("Server is running on port 3000.");
 });
