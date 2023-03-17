@@ -49,9 +49,6 @@ db.connect(function (err) {
 app.get('/usersdata', async (req, res, result) => {
   try {
     let searchFilter = req.body.search
-     
-   
-    console.log('searchFilter :>> ', searchFilter);
     let data = await db.query(
     `SELECT *
     FROM (
@@ -61,7 +58,7 @@ app.get('/usersdata', async (req, res, result) => {
     ON "folder".id="metting"."folderid")
     INNER JOIN "msuser"
     ON "metting".id="msuser"."mettingid") 
-
+ 
     ${!searchFilter
       ?""
       
@@ -77,6 +74,7 @@ app.get('/usersdata', async (req, res, result) => {
 
     `)
        res.status(200).send({ sucess: true, data: data.rows})
+       console.log('data :>> ', data.rows);
   } catch (error) {
     res.status(400).send({ sucess: false, message: error.message })
     console.log('message :>> ',  res.status(400));
